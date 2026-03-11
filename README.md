@@ -28,54 +28,46 @@ class RaceSim
 {
     static void Main(string[] args)
     {
-        Console.Write("Enter Base Lap Time(s): ");
-        if (!float.TryParse(Console.ReadLine(), out float baseLapTime))
+        Console.Write("Enter base lap time (s): ");
+float LapTime = float.Parse(Console.ReadLine());
+
+Console.Write("Enter number of laps: ");
+int laps = Convert.ToInt32(Console.ReadLine());
+
+string[] TyreNames = { "Soft", "Medium", "Hard", "Wet" };
+float[] StartGrip = { 100, 90, 80, 70 };
+float[] DegradeRate = { 1.11f, 1.06f, 0.8f, 0.6f };
+float[] Overheat = { 1.1f, 1.06f, 1.03f, 1.01f };
+
+for (int t = 0; t < 4; t++)
+{
+    Console.WriteLine(TyreNames[t] + " Tyre\n");
+
+    float CurrentGrip = StartGrip[t];
+    float CurrentDegrade = DegradeRate[t];
+    double TotalTime = 0;
+
+    for (int lap = 1; lap <= laps; lap++)
+    {
+        float GripLoss = (100 - CurrentGrip) / 100;
+        float Time = LapTime + (GripLoss * 2.0f);
+
+        TotalTime += Time;
+
+        Console.WriteLine("Lap " + lap +
+                          " | Grip: " + CurrentGrip.ToString("f2") +
+                          "% | Lap Time: " + Time.ToString("f3"));
+
+        CurrentGrip = CurrentGrip - CurrentDegrade;
+        CurrentDegrade = CurrentDegrade * Overheat[t];
+
+        if (CurrentGrip < 0)
         {
-            return;
+            CurrentGrip = 0;
         }
-
-        Console.Write("Enter num of laps: ");
-        if (!int.TryParse(Console.ReadLine(), out int totalLaps))
-        {
-            return;
-        }
-
-        var tyreLibrary = new List<Tyre>
-        {
-            new Tyre("Soft", 100f, 1.1f, 1.1f),
-            new Tyre("Medium", 90f, 1.06f, 1.06f),
-            new Tyre("Hard", 80f, 0.8f, 1.03f)
-        };
-
-        Sim(tyreLibrary, baseLapTime, totalLaps);
     }
 
-    static void Sim(List<Tyre> tyres, float baseTime, int laps)
-    {
-        foreach (var tyre in tyres)
-        {
-            Console.WriteLine($"\nTyre Compound: {tyre.Compound}");
-            float currentGrip = tyre.InitialGrip;
-            float currentDecay = tyre.DecayRate;
-            double cumulativeTime = 0;
-
-            for (int i = 1; i <= laps; i++)
-            {
-                float gripDeficit = (100 - currentGrip) / 100;
-                float delta = gripDeficit * 2.0f;
-                float lapTime = baseTime + delta;
-
-                cumulativeTime = cumulativeTime + lapTime;
-
-                Console.WriteLine($"Lap {i:D2} | Grip: {currentGrip:F2}% | Time: {lapTime:F3}s");
-
-                currentGrip = currentGrip - currentDecay;
-                currentDecay = currentDecay * tyre.ThermalSensitivity; 
-
-                if (currentGrip < 0) currentGrip = 0;
-            }
-
-            Console.WriteLine($"Total Duration: {cumulativeTime:F3}s");
+    Console.WriteLine("\nTotal Stint Time: " + TotalTime.ToString("f3") + " seconds");
         }
     }
 }
