@@ -7,28 +7,6 @@ the faster it begins to fall apart
 
 //Estimated simulation of tyre degradation over a stint
 
-
-public class Tyre
-{
-    public string Compound {get; set; }
-    public float InitialGrip {get; set; }
-    public float DecayRate { get; set; }
-    public float ThermalSensitivity { get; set; }
-
-    public Tyre(string name, float grip, float decay, float heat)
-    {
-        Compound = name;
-        InitialGrip = grip;
-        DecayRate = decay;
-        ThermalSensitivity = heat;
-    }
-}
-
-class RaceSim
-{
-    static void Main(string[] args)
-    {
-        Console.Write("Enter base lap time (s): ");
 float LapTime = float.Parse(Console.ReadLine());
 
 Console.Write("Enter number of laps: ");
@@ -68,6 +46,8 @@ for (int t = 0; t < 4; t++)
     }
 
     Console.WriteLine("\nTotal Stint Time: " + TotalTime.ToString("f3") + " seconds");
-        }
-    }
-}
+
+
+
+
+
